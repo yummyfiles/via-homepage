@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08090b">
+<title>Home // yummy.dev</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{color-scheme:dark;--bg:#08090b;--panel:rgba(17,19,24,.72);--line:rgba(255,255,255,.10);--muted:#858b98;--text:#f3f5f8;--accent:#eaf2ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;background:radial-gradient(ellipse at 50% -20%,#171c27 0%,transparent 52%),var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;display:flex;justify-content:center;padding:clamp(18px,5vw,56px) 16px 40px}
+main{width:min(720px,100%);display:flex;flex-direction:column;gap:22px}
+.top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px;letter-spacing:.08em}
+.brand{color:#fff;font-family:'Share Tech Mono',monospace;font-size:15px}
+.clock{text-align:center;padding:34px 0 12px}
+.time{font-family:'Share Tech Mono',monospace;font-size:clamp(52px,13vw,94px);letter-spacing:-.04em;line-height:1}
+.date{margin-top:15px;color:var(--muted);font-size:13px}
+.search{display:flex;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:8px;backdrop-filter:blur(18px)}
+.search input{min-width:0;flex:1;background:transparent;border:0;outline:0;color:var(--text);font:14px 'JetBrains Mono',monospace;padding:12px}
+.search button,.action{border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);border-radius:10px;padding:0 16px;font:12px 'JetBrains Mono',monospace;cursor:pointer}
+.search button:hover,.action:hover,.tile:hover{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.22)}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:5px 0 12px}
+.section-head span{font-size:12px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tile{position:relative;min-height:94px;text-decoration:none;color:var(--text);border:1px solid var(--line);background:var(--panel);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:.15s;overflow:hidden}
+.tile img{width:25px;height:25px;object-fit:contain;border-radius:5px}
+.tile .fallback{font-size:20px;font-family:'Share Tech Mono',monospace}
+.tile small{font-size:11px;color:#c5c9d1;max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile .remove{position:absolute;top:5px;right:6px;color:#858b98;font-size:15px;opacity:0;cursor:pointer;border:0;background:none}
+.tile:hover .remove{opacity:1}
+.add{font-size:25px;color:var(--muted);font-weight:300}
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:16px;min-width:0}
+.github{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.github img{width:42px;height:42px;border-radius:50%;border:1px solid var(--line)}
+.ghname{font-size:13px}.ghsub{font-size:11px;color:var(--muted);margin-top:5px}
+.stats{display:flex;gap:15px;margin-top:16px;font-size:11px;color:var(--muted);flex-wrap:wrap}
+.stats b{color:var(--text);font-weight:500}
+.bookmark{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:100%;min-height:90px;text-decoration:none;color:var(--text);font-size:12px}
+footer{text-align:center;color:#555c68;font-size:10px;padding-top:8px}
+dialog{width:min(400px,calc(100% - 28px));border:1px solid #30343d;border-radius:16px;background:#101217;color:var(--text);padding:22px;box-shadow:0 20px 80px #0008}
+dialog::backdrop{background:#0009;backdrop-filter:blur(5px)}
+dialog h2{font:18px 'Share Tech Mono',monospace;margin:0 0 18px}
+dialog label{display:block;color:var(--muted);font-size:11px;margin:12px 0 6px}
+dialog input{width:100%;background:#08090b;border:1px solid var(--line);border-radius:9px;padding:12px;color:white;font:13px 'JetBrains Mono',monospace;outline:none}
+dialog input:focus{border-color:#65758e}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.action{padding:10px 14px}
+.action.primary{background:#eaf2ff;color:#08090b;border-color:#eaf2ff}
+@media(max-width:500px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}.bottom{grid-template-columns:1fr}.clock{padding-top:25px}.top{font-size:10px}}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><span class="brand">yummy.dev // HOME</span><span id="status">LOCAL • PERSONAL</span></div>
+<section class="clock"><div class="time" id="time">--:--</div><div class="date" id="date">Loading date…</div></section>
+<form class="search" action="https://duckduckgo.com/" method="get"><input name="q" placeholder="Search DuckDuckGo…" autocomplete="off" autofocus><button type="submit">SEARCH ↗</button></form>
+<section><div class="section-head"><span>Quick access</span><span id="shortcut-count">04 LINKS</span></div><div class="tiles" id="tiles"></div></section>
+<section class="bottom">
+<div class="card"><div class="section-head"><span>GitHub / profile</span><span>↗</span></div><a class="github" href="https://github.com/yummyfiles" target="_blank" rel="noopener"><img id="avatar" src="https://github.com/yummyfiles.png" alt=""><div><div class="ghname">yummyfiles</div><div class="ghsub">github.com/yummyfiles</div></div></a><div class="stats" id="stats"><span>Repos <b>—</b></span><span>Followers <b>—</b></span><span>Following <b>—</b></span></div></div>
+<div class="card"><div class="section-head"><span>Browser</span><span>TOOLS</span></div><a class="bookmark" href="via://bookmarks"><span>▤</span><span>OPEN VIA BOOKMARKS ↗</span></a></div>
+</section>
+<footer>made for the web • no trackers • shortcuts saved on this device</footer>
+</main>
+<dialog id="add-dialog"><form id="add-form"><h2>NEW SHORTCUT</h2><label for="shortcut-name">NAME</label><input id="shortcut-name" maxlength="24" placeholder="Example" required><label for="shortcut-url">URL</label><input id="shortcut-url" type="url" placeholder="https://example.com" required><div class="modal-actions"><button type="button" class="action" id="cancel">CANCEL</button><button class="action primary" type="submit">ADD LINK</button></div></form></dialog>
+<script>
+const $=id=>document.getElementById(id);
+function tick(){const n=new Date();$('time').textContent=n.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hour12:false});$('date').textContent=n.toLocaleDateString([], {weekday:'long',month:'long',day:'numeric',year:'numeric'});}
+tick();setInterval(tick,1000);
+const defaults=[{name:'YouTube',url:'https://youtube.com',icon:'https://www.youtube.com/s/desktop/fe1e7d6a/img/favicon_144x144.png'},{name:'GitHub',url:'https://github.com',icon:'https://github.githubassets.com/favicons/favicon.svg'},{name:'Reddit',url:'https://reddit.com',icon:'https://www.redditstatic.com/desktop2x/img/favicon/favicon-32x32.png'},{name:'Discord',url:'https://discord.com/app',icon:'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg'}];
+let links;try{links=JSON.parse(localStorage.getItem('via-home-shortcuts'))||defaults}catch{links=defaults}
+function safeUrl(raw){try{const u=new URL(raw);return ['http:','https:'].includes(u.protocol)?u.href:null}catch{return null}}
+function render(){const root=$('tiles');root.innerHTML='';links.forEach((item,i)=>{const url=safeUrl(item.url);if(!url)return;const a=document.createElement('a');a.className='tile';a.href=url;a.title=item.name;const img=document.createElement('img');img.src=item.icon||('https://www.google.com/s2/favicons?domain_url='+encodeURIComponent(url)+'&sz=64');img.alt='';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'fallback',textContent:item.name.slice(0,1).toUpperCase()})};const label=document.createElement('small');label.textContent=item.name;a.append(img,label);const rm=document.createElement('button');rm.className='remove';rm.type='button';rm.textContent='×';rm.title='Remove shortcut';rm.onclick=e=>{e.preventDefault();e.stopPropagation();links.splice(i,1);save();render()};a.append(rm);root.append(a)});const plus=document.createElement('button');plus.className='tile';plus.type='button';plus.innerHTML='<span class="add">+</span><small>Add shortcut</small>';plus.onclick=()=>$('add-dialog').showModal();root.append(plus);$('shortcut-count').textContent=String(links.length).padStart(2,'0')+' LINKS'}
+function save(){localStorage.setItem('via-home-shortcuts',JSON.stringify(links))}
+render();$('cancel').onclick=()=>$('add-dialog').close();$('add-form').onsubmit=e=>{e.preventDefault();let name=$('shortcut-name').value.trim(),url=safeUrl($('shortcut-url').value.trim());if(!name||!url){$('shortcut-url').setCustomValidity('Use a valid http(s) URL');$('shortcut-url').reportValidity();return}$('shortcut-url').setCustomValidity('');links.push({name,url,icon:'https://www.google.com/s2/favicons?domain_url='+encodeURIComponent(url)+'&sz=64'});save();render();$('add-dialog').close();e.target.reset()};
+fetch('https://api.github.com/users/yummyfiles').then(r=>r.ok?r.json():Promise.reject()).then(d=>{$('avatar').src=d.avatar_url;$('stats').innerHTML='<span>Repos <b>'+d.public_repos+'</b></span><span>Followers <b>'+d.followers+'</b></span><span>Following <b>'+d.following+'</b></span>'}).catch(()=>{$('stats').textContent='GitHub stats unavailable'});
+</script>
+</body></html>
