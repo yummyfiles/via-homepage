@@ -66,7 +66,7 @@ dialog input:focus{border-color:#65758e}
 </main>
 <dialog id="add-dialog"><form id="add-form"><h2>NEW SHORTCUT</h2><label for="shortcut-name">NAME</label><input id="shortcut-name" maxlength="24" placeholder="Example" required><label for="shortcut-url">URL</label><input id="shortcut-url" type="url" placeholder="https://example.com" required><div class="modal-actions"><button type="button" class="action" id="cancel">CANCEL</button><button class="action primary" type="submit">ADD LINK</button></div></form></dialog>
 <script>const $=id=>document.getElementById(id);
-function updateClock(){const n=new Date();$("time").textContent=n.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false});$("date").textContent=n.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});}
+function updateClock(){const n=new Date();$("time").textContent=n.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:true});$("date").textContent=n.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});}
 updateClock();setInterval(updateClock,1000);
 const defaults=[{name:"YouTube",url:"https://youtube.com"},{name:"GitHub",url:"https://github.com"},{name:"Reddit",url:"https://reddit.com"},{name:"Discord",url:"https://discord.com/app"}];let links=defaults;try{const saved=JSON.parse(localStorage.getItem("via-home-shortcuts"));if(Array.isArray(saved))links=saved;}catch(e){}
 function validUrl(v){try{const u=new URL(v);return u.protocol==="https:"||u.protocol==="http:"?u.href:null;}catch(e){return null;}}
